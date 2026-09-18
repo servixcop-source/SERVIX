@@ -628,8 +628,9 @@
 
         <div>
           <label class="block text-xs font-extrabold text-brand-navy mb-2">رفع الشعار من الجهاز</label>
-          <input type="file" accept="image/*" onchange="handleFileUpload(this, 'partner-logo-url')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-emerald">
+          <input type="file" id="partner-logo-file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-emerald">
           <input type="text" id="partner-logo-url" placeholder="أو أدخل رابط الشعار..." class="w-full mt-2 px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          <div id="partner-upload-progress" class="hidden mt-2 text-xs text-brand-emerald font-bold animate-pulse">⏳ جاري رفع الصورة...</div>
         </div>
 
         <button type="submit" class="w-full py-4 bg-brand-emerald text-white font-extrabold text-base rounded-2xl shadow-lg">حفظ الشريك</button>
@@ -1242,6 +1243,11 @@
     }
 
     function openAddPartnerModal() {
+      // Reset form fields
+      document.getElementById('partner-name').value = '';
+      document.getElementById('partner-logo-url').value = '';
+      document.getElementById('partner-logo-file').value = '';
+      document.getElementById('partner-upload-progress').classList.add('hidden');
       document.getElementById('partner-editor-modal').classList.remove('hidden');
     }
     function closePartnerEditorModal() {
@@ -1250,9 +1256,27 @@
 
     async function handlePartnerSave(e) {
       e.preventDefault();
+
+      const fileInput = document.getElementById('partner-logo-file');
+      let finalLogoUrl = document.getElementById('partner-logo-url').value;
+
+      // If a file was selected, upload it first then save
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        document.getElementById('partner-upload-progress').classList.remove('hidden');
+        try {
+          finalLogoUrl = await uploadImageFile(fileInput.files[0]);
+          document.getElementById('partner-logo-url').value = finalLogoUrl;
+        } catch (err) {
+          document.getElementById('partner-upload-progress').classList.add('hidden');
+          showToast('فشل رفع الصورة، حاول مرة أخرى', 'error');
+          return;
+        }
+        document.getElementById('partner-upload-progress').classList.add('hidden');
+      }
+
       const payload = {
         name: document.getElementById('partner-name').value,
-        logo: document.getElementById('partner-logo-url').value
+        logo: finalLogoUrl
       };
 
       try {
@@ -1266,9 +1290,11 @@
           showToast('تمت إضافة الشريك بنجاح!', 'success');
           closePartnerEditorModal();
           fetchPartners();
+        } else {
+          showToast(json.message || 'خطأ في إضافة الشريك', 'error');
         }
       } catch (err) {
-        showToast('خطأ في إضافة الشريك', 'error');
+        showToast('خطأ في الاتصال بالخادم', 'error');
       }
     }
 
