@@ -155,14 +155,15 @@ app.post('/api/admin/upload', (req, res) => {
     let buffer;
     let ext = '.jpg';
 
-    const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-    if (matches && matches.length === 3) {
-      const type = matches[1];
-      if (type.includes('png')) ext = '.png';
-      else if (type.includes('svg')) ext = '.svg';
-      else if (type.includes('webp')) ext = '.webp';
-      else if (type.includes('gif')) ext = '.gif';
-      buffer = Buffer.from(matches[2], 'base64');
+    if (imageBase64.startsWith('data:')) {
+      const parts = imageBase64.split(',');
+      const metadata = parts[0];
+      if (metadata.includes('png')) ext = '.png';
+      else if (metadata.includes('svg')) ext = '.svg';
+      else if (metadata.includes('webp')) ext = '.webp';
+      else if (metadata.includes('gif')) ext = '.gif';
+      
+      buffer = Buffer.from(parts[1], 'base64');
     } else {
       buffer = Buffer.from(imageBase64, 'base64');
     }
