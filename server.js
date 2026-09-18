@@ -144,7 +144,9 @@ app.post('/api/admin/change-credentials', async (req, res) => {
   }
 });
 
-// --- Local Image Upload Endpoint ---
+// --- Image Upload Endpoint ---
+// Stores image as base64 data URI (works on cloud servers with read-only filesystem)
+// Falls back to local disk if uploads directory is writable (for local dev)
 app.post('/api/admin/upload', (req, res) => {
   try {
     const { imageBase64 } = req.body;
@@ -152,32 +154,39 @@ app.post('/api/admin/upload', (req, res) => {
       return res.status(400).json({ success: false, message: 'بيانات الصورة غير موجودة.' });
     }
 
-    let buffer;
-    let ext = '.jpg';
+    // Ensure the imageBase64 is a valid data URI
+    let dataUri = imageBase64;
+    if (!imageBase64.startsWith('data:')) {
+      dataUri = `data:image/jpeg;base64,${imageBase64}`;
+    }
 
-    if (imageBase64.startsWith('data:')) {
-      const parts = imageBase64.split(',');
+    // Try to save to disk first (works locally), fallback to returning data URI directly
+    try {
+      let ext = '.jpg';
+      const parts = dataUri.split(',');
       const metadata = parts[0];
       if (metadata.includes('png')) ext = '.png';
       else if (metadata.includes('svg')) ext = '.svg';
       else if (metadata.includes('webp')) ext = '.webp';
       else if (metadata.includes('gif')) ext = '.gif';
-      
-      buffer = Buffer.from(parts[1], 'base64');
-    } else {
-      buffer = Buffer.from(imageBase64, 'base64');
+
+      const cleanName = `upload_${Date.now()}_${Math.floor(Math.random() * 1000)}${ext}`;
+      const filePath = path.join(uploadsDir, cleanName);
+      const buffer = Buffer.from(parts[1], 'base64');
+      fs.writeFileSync(filePath, buffer);
+
+      const fileUrl = `/uploads/${cleanName}`;
+      return res.json({ success: true, url: fileUrl, message: 'تم رفع الصورة بنجاح!' });
+    } catch (diskErr) {
+      // Disk write failed (cloud server) - return the data URI directly to be stored in DB
+      console.warn('Disk write failed, using data URI fallback:', diskErr.message);
+      return res.json({ success: true, url: dataUri, message: 'تم رفع الصورة بنجاح!' });
     }
-
-    const cleanName = `upload_${Date.now()}_${Math.floor(Math.random() * 1000)}${ext}`;
-    const filePath = path.join(uploadsDir, cleanName);
-    fs.writeFileSync(filePath, buffer);
-
-    const fileUrl = `/uploads/${cleanName}`;
-    res.json({ success: true, url: fileUrl, message: 'تم رفع الصورة بنجاح!' });
   } catch (err) {
     console.error('Upload error:', err);
     res.status(500).json({ success: false, message: 'حدث خطأ أثناء رفع الصورة.' });
   }
+
 });
 
 // --- Admin Articles Management ---
