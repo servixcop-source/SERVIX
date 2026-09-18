@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 110" width="420" height="110" fill="none">
+  <!-- Brand Definitions -->
+  <defs>
+    <style>
+      .brand-title { font-family: 'IBM Plex Sans', 'Cairo', Arial, sans-serif; font-weight: 900; }
+      .brand-sub { font-family: 'IBM Plex Sans', Arial, sans-serif; font-weight: 700; letter-spacing: 1.5px; }
+    </style>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#00A3E0" />
+    </linearGradient>
+  </defs>
+
+  <!-- SERVIX Typography Group -->
+  <g transform="translate(10, 15)">
+    <!-- Stylized 'S' with top Cyan arc -->
+    <path d="M 28 8 L 52 8 C 55 8, 56 10, 56 13 L 56 18 C 56 21, 54 22, 51 22 L 28 22 C 20 22, 16 26, 16 33 L 16 35 C 16 42, 20 46, 28 46 L 50 46 C 56 46, 58 48, 58 52 L 58 56 C 58 60, 54 62, 48 62 L 18 62 C 14 62, 12 59, 12 55 L 12 49" stroke="url(#cyanGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <path d="M 12 49 L 12 55 C 12 60, 16 64, 22 64 L 48 64 C 55 64, 60 59, 60 52 L 60 48 C 60 42, 54 38, 46 38 L 26 38 C 22 38, 18 36, 18 31 L 18 29 C 18 24, 22 20, 28 20" stroke="#0F2438" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+    <!-- Letter E -->
+    <path d="M 72 20 L 102 20 M 72 20 L 72 64 M 72 42 L 98 42 M 72 64 L 102 64" stroke="#0F2438" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter" fill="none" />
+
+    <!-- Letter R -->
+    <path d="M 116 20 L 116 64 M 116 20 L 138 20 C 146 20, 150 24, 150 32 C 150 40, 144 43, 136 43 L 116 43 M 134 43 L 152 64" stroke="#0F2438" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter" fill="none" />
+
+    <!-- Letter V -->
+    <path d="M 162 20 L 178 64 L 194 20" stroke="#0F2438" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+    <!-- Letter I -->
+    <path d="M 208 20 L 208 64" stroke="#0F2438" stroke-width="9" stroke-linecap="square" fill="none" />
+
+    <!-- Scrubber Machine Box Motif with Cyan X inside -->
+    <g transform="translate(225, 14)">
+      <!-- Outer Black Scrubber/Machine Box -->
+      <rect x="0" y="0" width="68" height="54" rx="6" fill="#0F2438" />
+      <!-- Small Scrubber Teeth Grid on Right -->
+      <line x1="62" y1="10" x2="62" y2="44" stroke="#ffffff" stroke-width="2" stroke-dasharray="4,4" />
+      <!-- Extension Handle on Far Right -->
+      <path d="M 68 27 L 90 27" stroke="#0F2438" stroke-width="6" stroke-linecap="round" />
+      <path d="M 90 18 L 90 36" stroke="#0F2438" stroke-width="5" stroke-linecap="round" />
+
+      <!-- Cyan Letter 'X' inside the Black Box -->
+      <path d="M 18 13 L 50 41 M 50 13 L 18 41" stroke="#0284C7" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+
+  <!-- Subtitle: MAINTENANCE & CLEANING SERVICE -->
+  <text x="14" y="96" class="brand-sub" font-size="16.5" fill="#0F2438">MAINTENANCE &amp; CLEANING SERVICE</text>
+</svg>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">مقال | سيرفكس</title>
+  <meta id="meta-desc" name="description" content="اقرأ أحدث المقالات في مدونة سيرفكس لإدارة المرافق والصيانة.">
+  <meta id="meta-keywords" name="keywords" content="سيرفكس, مقالات, صيانة">
+  <meta name="author" content="SERVIX">
+  <meta name="robots" content="index, follow">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" id="og-title" content="مقال | سيرفكس">
+  <meta property="og:description" id="og-desc" content="اقرأ أحدث المقالات في مدونة سيرفكس.">
+  <meta property="og:image" id="og-image" content="https://servix.sa/assets/logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="twitter-title" content="مقال | سيرفكس">
+  <meta name="twitter:description" id="twitter-desc" content="اقرأ أحدث المقالات في مدونة سيرفكس.">
+  <meta name="twitter:image" id="twitter-image" content="https://servix.sa/assets/logo.png">
+  <link rel="canonical" id="canonical-link" href="">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0f172a',
+              navyLight: '#1e293b',
+              emerald: '#10b981',
+              emeraldDark: '#059669',
+              emeraldLight: '#34d399',
+            }
+          },
+          fontFamily: {
+            sans: ['Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { font-family: 'Arial', sans-serif !important; }
+    .material-symbols-outlined { font-family: 'Material Symbols Outlined' !important; }
+    
+    /* Blog Content Styles */
+    .prose h1 { font-size: 2.25rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h2 { font-size: 1.875rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h3 { font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.75rem; margin-top: 1.5rem; }
+    .prose p { margin-bottom: 1.25rem; line-height: 1.8; color: #334155; font-size: 1.125rem; }
+    .prose ul { list-style-type: disc; padding-inline-start: 1.5rem; margin-bottom: 1.25rem; color: #334155; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose strong { font-weight: 800; color: #0f172a; }
+  </style>
+</head>
+<body class="antialiased bg-slate-50 selection:bg-brand-emerald selection:text-white flex flex-col min-h-screen">
+
+  <!-- Header Navigation Bar -->
+  <header class="fixed top-0 w-full z-40 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+      
+      <!-- Official Brand Logo -->
+      <a href="/index.html" class="flex items-center gap-3 shrink-0 me-16 sm:me-24">
+        <img id="site-logo-nav" src="/assets/logo.png" alt="سيرفكس SERVIX Logo" class="max-h-12 sm:max-h-16 w-auto h-auto object-contain scale-[1.8] sm:scale-[2.2] origin-right transition-all duration-300">
+      </a>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="/index.html" class="inline-flex items-center gap-2 text-slate-600 hover:text-brand-emerald font-bold transition-colors">
+          <span id="nav-back">العودة للرئيسية</span>
+          <span class="material-symbols-outlined rtl:rotate-180">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 pt-32 pb-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div id="loading" class="text-center py-20">
+        <span class="material-symbols-outlined text-4xl text-brand-emerald animate-spin">refresh</span>
+        <p id="msg-loading" class="mt-4 text-slate-500 font-bold">جاري تحميل المقال...</p>
+      </div>
+
+      <div id="error-msg" class="hidden text-center py-20">
+        <span class="material-symbols-outlined text-6xl text-red-500">error</span>
+        <h2 id="msg-notfound" class="mt-4 text-2xl font-extrabold text-brand-navy">عذراً، المقال غير موجود</h2>
+        <a href="/index.html" id="btn-back" class="mt-6 inline-block px-6 py-3 bg-brand-emerald text-white rounded-xl font-bold">العودة للرئيسية</a>
+      </div>
+
+      <article id="article-content" class="hidden bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+        
+        <!-- Article Header Image -->
+        <div class="w-full h-[300px] sm:h-[450px] relative">
+          <img id="art-img" src="" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+        </div>
+
+        <!-- Article Body -->
+        <div class="p-8 sm:p-12">
+          <div class="flex items-center gap-4 mb-6">
+            <span id="art-date" class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-extrabold text-sm"></span>
+            <span id="art-category" class="px-4 py-1.5 rounded-full bg-emerald-50 text-brand-emeraldDark font-extrabold text-sm">إدارة مرافق</span>
+          </div>
+          
+          <h1 id="art-title" class="text-3xl sm:text-5xl font-extrabold text-brand-navy mb-8 leading-tight"></h1>
+          
+          <div id="art-body" class="prose max-w-none rtl:text-right">
+            <!-- Content injected here -->
+          </div>
+
+          <!-- Share Section -->
+          <div class="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <h4 id="lbl-share" class="font-extrabold text-brand-navy">شارك المقال:</h4>
+            <div class="flex gap-3">
+              <a href="#" onclick="shareTwitter(event)" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-sky-500 hover:text-white text-slate-600 flex items-center justify-center transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></a>
+              <a href="#" onclick="shareWhatsapp(event)" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#25D366] hover:text-white text-slate-600 flex items-center justify-center transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 .002 5.385.002 12.03c0 2.124.553 4.195 1.603 6.012L.002 24l6.113-1.604a11.96 11.96 0 0 0 5.916 1.564h.005c6.645 0 12.029-5.385 12.029-12.03S18.676 0 12.031 0zm0 21.956c-1.802 0-3.565-.483-5.111-1.401l-.367-.217-3.8.997 1.015-3.705-.238-.378A9.97 9.97 0 0 1 2.006 12.03c0-5.532 4.502-10.035 10.03-10.035s10.027 4.503 10.027 10.035c-.001 5.532-4.504 10.034-10.032 10.034v-.008zm5.503-7.525c-.302-.15-1.785-.882-2.062-.983-.277-.101-.479-.151-.68.151-.202.302-.782.983-.958 1.185-.176.202-.352.227-.654.076-.302-.151-1.274-.47-2.428-1.5-.9-.806-1.507-1.802-1.683-2.104-.176-.302-.019-.465.132-.616.136-.136.302-.352.453-.529.151-.176.202-.302.302-.503.1-.202.05-.378-.025-.529-.075-.151-.68-1.639-.933-2.244-.247-.59-.497-.509-.68-.519-.175-.01-.377-.01-.579-.01-.202 0-.528.076-.805.378-.277.302-1.057 1.033-1.057 2.518s1.082 2.921 1.233 3.123c.151.202 2.13 3.254 5.161 4.561 2.229.96 2.871.815 3.396.685.642-.16 1.785-.73 2.037-1.436.251-.706.251-1.311.176-1.436-.076-.126-.277-.202-.579-.353z"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <footer class="bg-brand-navy text-center py-6 border-t border-slate-800 mt-auto">
+    <p id="footer-text" class="text-slate-400 text-sm font-bold">جميع الحقوق محفوظة &copy; 2026 سيرفكس لإدارة المرافق.</p>
+  </footer>
+
+  <script>
+    let currentLang = localStorage.getItem('servix_lang') || 'ar';
+
+    function applyStaticLang() {
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = currentLang;
+
+      const dict = {
+        en: {
+          'nav-back': 'Back to Home',
+          'msg-loading': 'Loading article...',
+          'msg-notfound': 'Sorry, Article Not Found',
+          'btn-back': 'Back to Home',
+          'art-category': 'Facility Management',
+          'lbl-share': 'Share Article:',
+          'footer-text': 'All rights reserved © 2026 Servix Facility Management.'
+        },
+        ar: {
+          'nav-back': 'العودة للرئيسية',
+          'msg-loading': 'جاري تحميل المقال...',
+          'msg-notfound': 'عذراً، المقال غير موجود',
+          'btn-back': 'العودة للرئيسية',
+          'art-category': 'إدارة مرافق',
+          'lbl-share': 'شارك المقال:',
+          'footer-text': 'جميع الحقوق محفوظة © 2026 سيرفكس لإدارة المرافق.'
+        }
+      };
+
+      for (const [id, text] of Object.entries(dict[currentLang])) {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+      }
+    }
+
+    async function loadArticle() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const slug = urlParams.get('slug');
+      
+      if (!slug) {
+        showError();
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/public/articles/${slug}`);
+        const json = await res.json();
+        
+        if (json.success && json.article) {
+          renderArticle(json.article);
+          fetchLogo(); // to update header logo
+        } else {
+          showError();
+        }
+      } catch(e) {
+        console.error(e);
+        showError();
+      }
+    }
+
+    async function fetchLogo() {
+      try {
+        const res = await fetch('/api/public/data');
+        const json = await res.json();
+        if (json.success && json.logo) {
+          const logoNav = document.getElementById('site-logo-nav');
+          if (logoNav) logoNav.src = json.logo.url || '/assets/logo.png';
+        }
+      } catch(e) {}
+    }
+
+    function renderArticle(art) {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('article-content').classList.remove('hidden');
+
+      const isEn = currentLang === 'en';
+      const displayTitle = isEn ? (art.titleEn || art.title) : art.title;
+      const displayDesc = isEn ? (art.shortDescEn || art.shortDesc) : art.shortDesc;
+      const displayContent = isEn ? (art.contentEn || art.content) : art.content;
+
+      // SEO
+      document.getElementById('page-title').innerText = displayTitle + (isEn ? " | Servix" : " | سيرفكس");
+      document.getElementById('meta-desc').content = art.metaDescription || displayDesc;
+      document.getElementById('meta-keywords').content = art.keywords || '';
+      document.getElementById('og-title').content = art.metaTitle || displayTitle;
+      document.getElementById('og-desc').content = art.metaDescription || displayDesc;
+      document.getElementById('og-image').content = art.imageUrl;
+
+      // Content
+      document.getElementById('art-title').innerText = displayTitle;
+      document.getElementById('art-date').innerText = art.date || '';
+      document.getElementById('art-img').src = art.imageUrl || '/assets/logo.png';
+      
+      const bodyEl = document.getElementById('art-body');
+      bodyEl.innerHTML = displayContent || '';
+      bodyEl.className = isEn ? 'prose max-w-none text-left' : 'prose max-w-none rtl:text-right';
+    }
+
+    function showError() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('error-msg').classList.remove('hidden');
+    }
+
+    function shareTwitter(e) {
+      e.preventDefault();
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.getElementById('art-title').innerText);
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareWhatsapp(e) {
+      e.preventDefault();
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.getElementById('art-title').innerText);
+      window.open(`https://wa.me/?text=${text} - ${url}`, '_blank');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyStaticLang();
+      loadArticle();
+    });
+  </script>
+</body>
+</html>

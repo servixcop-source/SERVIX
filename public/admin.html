@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم سيرفكس | SERVIX Admin Management System</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0B192C',
+              navyDark: '#050E1A',
+              navyLight: '#182C47',
+              emerald: '#00A896',
+              emeraldLight: '#02C39A',
+              emeraldDark: '#008073',
+              cyan: '#00B4D8',
+              surface: '#F8FAFC',
+              border: '#E2E8F0',
+              textMain: '#0F172A',
+              textMuted: '#64748B'
+            }
+          },
+          fontFamily: {
+            sans: ['Arial', 'Tahoma', 'sans-serif'],
+            display: ['Arial', 'Tahoma', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Base font - Arial Bold */
+    body, h1, h2, h3, h4, h5, h6, p, a, span:not(.material-symbols-outlined),
+    div, li, td, th, label, input, select, textarea, button {
+      font-family: Arial, 'Cairo', Tahoma, sans-serif !important;
+      font-weight: 700 !important;
+    }
+    body { font-size: 18px; background-color: #F1F5F9; color: #0F172A; }
+
+    /* Material Icons Font Fix */
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined' !important;
+      font-weight: normal !important;
+      font-style: normal !important;
+      font-size: inherit;
+      line-height: 1;
+      direction: ltr;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      font-feature-settings: 'liga';
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .admin-tab.active {
+      background-color: #00A896;
+      color: #FFFFFF !important;
+      font-weight: 800;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #F1F5F9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 left-6 z-50 flex flex-col gap-3 max-w-md w-full"></div>
+
+  <!-- ADMIN LOGIN MODAL OVERLAY (صفحة الدخول للوحة التحكم) -->
+  <div id="admin-login-modal" class="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 sm:p-10 shadow-2xl border border-slate-200 space-y-6 relative text-right">
+      <div class="text-center space-y-3">
+        <img src="/assets/logo.png" alt="SERVIX Logo" class="h-16 mx-auto object-contain bg-white p-2 rounded-2xl shadow-sm border border-slate-100">
+        <h2 class="text-2xl font-extrabold text-brand-navy">تسجيل الدخول للوحة التحكم</h2>
+        <p class="text-xs text-slate-500 font-bold">يرجى إدخال اسم المستخدم وكلمة المرور للمتابعة</p>
+      </div>
+
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">اسم المستخدم</label>
+          <input type="text" id="login-username" required placeholder="admin" value="admin" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-brand-emerald">
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">كلمة المرور</label>
+          <input type="password" id="login-password" required placeholder="••••••••" value="123" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-brand-emerald">
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-brand-emerald hover:bg-brand-emeraldDark text-white font-extrabold text-base rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-xl">lock_open</span>
+          <span>دخول اللوحة الأمنية</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header class="bg-brand-navy border-b border-slate-700 sticky top-0 z-40 text-white shadow-lg py-1">
+    <div class="max-w-[1600px] mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
+      
+      <div class="flex items-center gap-4">
+        <a href="/" class="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm">
+          <img src="/assets/logo.png" alt="SERVIX Logo" class="h-10 w-auto object-contain">
+        </a>
+        <div class="hidden sm:block">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-lg text-white">نظام إدارة المحتوى والـ 30 خدمة</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">v2.5.0</span>
+          </div>
+          <p class="text-xs text-slate-300 font-bold">سيرفكس للحلول المتكاملة وإدارة المرافق</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openChangePasswordModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs sm:text-sm font-bold text-slate-200 transition-all">
+          <span class="material-symbols-outlined text-lg text-emerald-400">manage_accounts</span>
+          <span>تعديل بيانات الدخول</span>
+        </button>
+
+        <button onclick="handleAdminLogout()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/30 text-xs sm:text-sm font-extrabold text-red-200 transition-all">
+          <span class="material-symbols-outlined text-lg">logout</span>
+          <span>تسجيل خروج</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Dashboard Layout -->
+  <div class="max-w-[1600px] mx-auto w-full px-4 lg:px-8 py-8 flex-1 flex flex-col gap-6">
+
+    <!-- Tabs Navigation -->
+    <div class="flex flex-wrap gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-200">
+      <button onclick="switchTab('services-tab', this)" class="admin-tab active px-5 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 transition-all text-slate-700 hover:bg-slate-50">
+        <span class="material-symbols-outlined text-xl">home_repair_service</span>
+        <span>إدارة الـ 30 خدمة</span>
+      </button>
+
+      <button onclick="switchTab('hero-slides-tab', this)" class="admin-tab px-5 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 transition-all text-slate-700 hover:bg-slate-50">
+        <span class="material-symbols-outlined text-xl">view_carousel</span>
+        <span>صور الغلاف (Hero Slides)</span>
+      </button>
+
+      <button onclick="switchTab('partners-tab', this)" class="admin-tab px-5 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 transition-all text-slate-700 hover:bg-slate-50">
+        <span class="material-symbols-outlined text-xl">handshake</span>
+        <span>شركاء النجاح</span>
+      </button>
+
+      <button onclick="switchTab('settings-tab', this)" class="admin-tab px-5 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 transition-all text-slate-700 hover:bg-slate-50">
+        <span class="material-symbols-outlined text-xl">settings</span>
+        <span>الهوية وصورة "من نحن"</span>
+      </button>
+
+      <button onclick="switchTab('articles-tab', this)" class="admin-tab px-5 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 transition-all text-slate-700 hover:bg-slate-50">
+        <span class="material-symbols-outlined text-xl">article</span>
+        <span>المدونة والمقالات</span>
+      </button>
+    </div>
+
+
+
+    <!-- TAB 2: SERVICES MANAGEMENT (إدارة الـ 30 خدمة مع رفع صورة من الجهاز) -->
+    <section id="services-tab" class="tab-panel flex flex-col gap-6">
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div>
+            <h3 class="font-extrabold text-xl text-brand-navy">إدارة قائمة الخدمات (إضافة، تعديل، حذف، وصور)</h3>
+            <p class="text-xs text-slate-500 mt-1 font-bold">يمكنك إضافة خدمة جديدة ورفع صورتها مباشرة من جهازك</p>
+          </div>
+          <button onclick="openAddServiceModal()" class="px-5 py-3 rounded-2xl bg-brand-emerald hover:bg-brand-emeraldDark text-white font-extrabold text-sm flex items-center gap-2 shadow-lg">
+            <span class="material-symbols-outlined text-xl">add_circle</span>
+            <span>إضافة خدمة جديدة</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="admin-services-grid"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: HERO COVER SLIDES (إدارة صور الغلاف) -->
+    <section id="hero-slides-tab" class="tab-panel hidden flex-col gap-6">
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div>
+            <h3 class="font-extrabold text-xl text-brand-navy">إدارة صور الغلاف (Hero Slides Manager)</h3>
+            <p class="text-xs text-slate-500 mt-1 font-bold">إضافة وحذف وتحديث صور الغلاف الرئيسية التي تظهر بالسلايدر</p>
+          </div>
+          <button onclick="openAddSlideModal()" class="px-5 py-3 rounded-2xl bg-brand-emerald hover:bg-brand-emeraldDark text-white font-extrabold text-sm flex items-center gap-2 shadow-lg">
+            <span class="material-symbols-outlined text-xl">add_photo_alternate</span>
+            <span>إضافة صورة غلاف جديدة</span>
+          </button>
+        </div>
+
+        <div id="admin-slides-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: PARTNERS (شركاء النجاح) -->
+    <section id="partners-tab" class="tab-panel hidden flex-col gap-6">
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div>
+            <h3 class="font-extrabold text-xl text-brand-navy">إدارة شركاء النجاح (Success Partners)</h3>
+            <p class="text-xs text-slate-500 mt-1 font-bold">إضافة وحذف شعارات وأسماء الشركاء المعروضة في شريط الحركة</p>
+          </div>
+          <button onclick="openAddPartnerModal()" class="px-5 py-3 rounded-2xl bg-brand-emerald hover:bg-brand-emeraldDark text-white font-extrabold text-sm flex items-center gap-2 shadow-lg">
+            <span class="material-symbols-outlined text-xl">add_handshake</span>
+            <span>إضافة شريك جديد</span>
+          </button>
+        </div>
+
+        <div id="admin-partners-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+      </div>
+    </section>
+
+
+
+    <!-- TAB 6: SETTINGS & SOCIAL LINKS -->
+    <section id="settings-tab" class="tab-panel hidden flex-col gap-6">
+      <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+        <h3 class="font-extrabold text-2xl text-brand-navy mb-6">إعدادات التواصل والواتساب و SEO</h3>
+        
+        <form onsubmit="handleCmsSave(event)" class="space-y-6">
+          <!-- General WhatsApp Button -->
+          <div class="mb-6">
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">رقم الواتساب للزر العائم والرئيسي (بدون +)</label>
+            <input type="text" id="setting-whatsapp" placeholder="966500000000" class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+
+          <hr class="border-slate-100 my-6">
+          <h4 class="font-extrabold text-lg text-brand-navy mb-4">تفاصيل قسم التواصل (Contact Us)</h4>
+          
+          <div class="space-y-6">
+            <!-- GM -->
+            <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+              <h5 class="font-extrabold text-sm text-brand-emerald mb-3">المدير العام (General Manager)</h5>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <input type="text" id="setting-gm-name" placeholder="الاسم (مثال: Eng. Riyadh Salah)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+                <input type="text" id="setting-gm-phone" placeholder="الهاتف" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+                <input type="email" id="setting-gm-email" placeholder="البريد الإلكتروني" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+              </div>
+            </div>
+
+            <!-- Sales -->
+            <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+              <h5 class="font-extrabold text-sm text-brand-emerald mb-3">مهندس المبيعات (Sales Engineer)</h5>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <input type="text" id="setting-sales-name" placeholder="الاسم" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+                <input type="text" id="setting-sales-phone" placeholder="الهاتف" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+                <input type="email" id="setting-sales-email" placeholder="البريد الإلكتروني" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+              </div>
+            </div>
+
+            <!-- HQ -->
+            <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+              <h5 class="font-extrabold text-sm text-brand-emerald mb-3">المقر الرئيسي (Head Office)</h5>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <input type="text" id="setting-hq-address" placeholder="العنوان" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+                <input type="text" id="setting-hq-phone" placeholder="الهاتف" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+                <input type="email" id="setting-hq-email" placeholder="البريد الإلكتروني" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold">
+              </div>
+            </div>
+          </div>
+
+          <hr class="border-slate-100 my-6">
+          <h4 class="font-extrabold text-lg text-brand-navy mb-4">شعار الموقع (اللوجو)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">صورة الشعار</label>
+              <div class="flex flex-col sm:flex-row gap-3 items-center">
+                <input type="file" accept="image/*" onchange="handleFileUpload(this, 'setting-logo-img')" class="w-full sm:w-auto text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-emerald hover:file:bg-emerald-100">
+                <input type="text" id="setting-logo-img" placeholder="أو أدخل رابط الشعار..." class="flex-1 w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">حجم الشعار (العرض بالبيكسل)</label>
+              <div class="flex items-center gap-4">
+                <input type="range" id="setting-logo-size" min="50" max="300" value="120" oninput="document.getElementById('logo-size-val').innerText = this.value + 'px'" class="flex-1 accent-brand-emerald">
+                <span id="logo-size-val" class="text-sm font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg">120px</span>
+              </div>
+            </div>
+          </div>
+
+          <hr class="border-slate-100 my-6">
+          <h4 class="font-extrabold text-lg text-brand-navy mb-4">قسم من نحن (الصورة التعريفية)</h4>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">رفع صورة "من نحن" من الجهاز</label>
+            <div class="flex flex-col sm:flex-row gap-3 items-center">
+              <input type="file" accept="image/*" onchange="handleFileUpload(this, 'setting-about-img')" class="w-full sm:w-auto text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-emerald hover:file:bg-emerald-100">
+              <input type="text" id="setting-about-img" placeholder="أو أدخل رابط الصورة هنا..." class="flex-1 w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+            </div>
+          </div>
+
+          <hr class="border-slate-100 my-6">
+          <h4 class="font-extrabold text-lg text-brand-navy mb-4">روابط التواصل الاجتماعي</h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">تويتر (X)</label>
+              <input type="url" id="social-twitter" placeholder="https://twitter.com/..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">إنستغرام</label>
+              <input type="url" id="social-instagram" placeholder="https://instagram.com/..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">سناب شات</label>
+              <input type="url" id="social-snapchat" placeholder="https://snapchat.com/..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">لينكد إن</label>
+              <input type="url" id="social-linkedin" placeholder="https://linkedin.com/..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">تيك توك</label>
+              <input type="url" id="social-tiktok" placeholder="https://tiktok.com/..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-brand-navy mb-2">فيسبوك</label>
+              <input type="url" id="social-facebook" placeholder="https://facebook.com/..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold">
+            </div>
+          </div>
+
+          <button type="submit" class="px-8 py-4 bg-brand-emerald text-white font-extrabold text-base rounded-2xl shadow-lg hover:bg-brand-emeraldDark transition-all">
+            حفظ إعدادات التواصل
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 5: ARTICLES MANAGEMENT -->
+    <section id="articles-tab" class="tab-panel hidden flex flex-col gap-6">
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div>
+            <h3 class="font-extrabold text-xl text-brand-navy">إدارة المدونة والمقالات</h3>
+            <p class="text-xs text-slate-500 mt-1 font-bold">إضافة وتعديل مقالات المدونة لتعزيز ظهور الموقع في محركات البحث (SEO)</p>
+          </div>
+          <button onclick="openArticleModal()" class="px-5 py-3 rounded-2xl bg-brand-emerald hover:bg-brand-emeraldDark text-white font-extrabold text-sm flex items-center gap-2 shadow-lg">
+            <span class="material-symbols-outlined text-lg">add</span>
+            <span>إضافة مقال جديد</span>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-right border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs font-extrabold uppercase">
+                <th class="p-4 rounded-tr-2xl w-24">صورة</th>
+                <th class="p-4">عنوان المقال</th>
+                <th class="p-4">تاريخ النشر</th>
+                <th class="p-4">الحالة</th>
+                <th class="p-4 rounded-tl-2xl w-32 text-center">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="articles-tbody" class="text-sm font-bold text-slate-700">
+              <!-- Articles loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ARTICLE CREATE/EDIT MODAL -->
+  <div id="article-editor-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-8 shadow-2xl border border-slate-200 space-y-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 id="article-modal-title" class="font-extrabold text-2xl text-brand-navy">إضافة مقال جديد</h3>
+        <button onclick="closeArticleModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleArticleSave(event)" class="space-y-4">
+        <input type="hidden" id="art-edit-id">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">عنوان المقال (عربي) *</label>
+            <input type="text" id="art-title" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">عنوان المقال (English) *</label>
+            <input type="text" id="art-title-en" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold ltr text-left">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">الرابط المخصص (Slug) *</label>
+            <input type="text" id="art-slug" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold ltr text-left" placeholder="example-slug">
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">تاريخ النشر *</label>
+            <input type="date" id="art-date" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">مقتطف قصير (عربي) *</label>
+            <textarea id="art-shortDesc" required rows="2" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">مقتطف قصير (English) *</label>
+            <textarea id="art-shortDesc-en" required rows="2" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal ltr text-left"></textarea>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">محتوى المقال (HTML) - عربي *</label>
+          <textarea id="art-content" required rows="5" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal ltr text-left" dir="ltr"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">محتوى المقال (HTML) - English *</label>
+          <textarea id="art-content-en" required rows="5" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal ltr text-left" dir="ltr"></textarea>
+        </div>
+
+        <!-- UPLOAD IMAGE FROM DEVICE -->
+        <div class="p-4 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 text-center">
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">صورة المقال (من جهازك)</label>
+          <input type="file" id="art-image-upload" accept="image/*" class="w-full text-sm font-bold mb-3 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-extrabold file:bg-brand-emerald file:text-white hover:file:bg-brand-emeraldDark">
+          <p class="text-xs text-slate-500 font-bold">أو أدخل رابط مباشر للصورة أدناه:</p>
+          <input type="text" id="art-imageUrl" placeholder="رابط الصورة (URL)" class="w-full px-4 py-2 mt-2 rounded-xl border border-slate-200 text-sm font-bold ltr text-left">
+          <div id="art-upload-progress" class="hidden mt-2 text-xs font-bold text-brand-emerald">جاري الرفع...</div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100">
+          <h4 class="font-extrabold text-brand-navy mb-3">إعدادات السيو (SEO)</h4>
+          <div class="space-y-3">
+            <input type="text" id="art-metaTitle" placeholder="Meta Title (يفضل أقل من 60 حرف)" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+            <textarea id="art-metaDesc" rows="2" placeholder="Meta Description (يفضل أقل من 160 حرف)" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal"></textarea>
+            <input type="text" id="art-keywords" placeholder="الكلمات المفتاحية (مفصولة بفاصلة)" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input type="checkbox" id="art-active" class="w-5 h-5 rounded text-brand-emerald border-slate-300" checked>
+          <label class="text-sm font-bold text-slate-700">مقال مفعل ومرئي للزوار</label>
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-brand-emerald hover:bg-brand-emeraldDark text-white font-extrabold text-base rounded-2xl shadow-lg transition-all">
+          حفظ المقال
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SERVICE CREATE/EDIT MODAL -->
+  <div id="service-editor-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-8 shadow-2xl border border-slate-200 space-y-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 id="service-modal-title" class="font-extrabold text-2xl text-brand-navy">إضافة خدمة جديدة</h3>
+        <button onclick="closeServiceEditorModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleServiceSave(event)" class="space-y-4">
+        <input type="hidden" id="srv-edit-id">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">عنوان الخدمة (عربي) *</label>
+            <input type="text" id="srv-title" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">عنوان الخدمة (English) *</label>
+            <input type="text" id="srv-title-en" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold ltr text-left">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">التصنيف</label>
+            <select id="srv-category" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold bg-white">
+              <option value="نظافة وصحة بيئية">نظافة وصحة بيئية</option>
+              <option value="صيانة وتشغيل">صيانة وتشغيل</option>
+              <option value="إدارة المرافق">إدارة المرافق</option>
+              <option value="إدارة الأملاك">إدارة الأملاك</option>
+              <option value="صيانة تخصصية">صيانة تخصصية</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">أيقونة الخدمة (Material Icon)</label>
+            <input type="text" id="srv-icon" placeholder="home_repair_service" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+        </div>
+
+        <!-- UPLOAD IMAGE FROM DEVICE -->
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">صورة الخدمة (رفع من الجهاز أو رابط)</label>
+          <div class="flex flex-col sm:flex-row gap-3 items-center">
+            <input type="file" id="srv-file-input" accept="image/*" onchange="handleFileUpload(this, 'srv-image-url')" class="w-full sm:w-auto text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-emerald hover:file:bg-emerald-100">
+            <input type="text" id="srv-image-url" placeholder="أو أكتب رابط الصورة هنا..." class="flex-1 w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">وصف مختصر (عربي) *</label>
+            <textarea id="srv-short-desc" rows="2" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">وصف مختصر (English) *</label>
+            <textarea id="srv-short-desc-en" rows="2" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal ltr text-left"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">وصف تفصيلي (عربي)</label>
+            <textarea id="srv-full-desc" rows="3" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">وصف تفصيلي (English)</label>
+            <textarea id="srv-full-desc-en" rows="3" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal ltr text-left"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">المميزات (عربي - ميزة بكل سطر)</label>
+            <textarea id="srv-features" rows="3" placeholder="ميزة 1&#10;ميزة 2&#10;ميزة 3" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">المميزات (English - ميزة بكل سطر)</label>
+            <textarea id="srv-features-en" rows="3" placeholder="Feature 1&#10;Feature 2" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal ltr text-left"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-brand-emerald text-white font-extrabold text-base rounded-2xl shadow-lg hover:bg-brand-emeraldDark transition-all">
+          حفظ الخدمة
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- HERO SLIDE CREATE/EDIT MODAL -->
+  <div id="slide-editor-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-8 shadow-2xl border border-slate-200 space-y-6">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 class="font-extrabold text-2xl text-brand-navy">إضافة صورة غلاف جديدة</h3>
+        <button onclick="closeSlideEditorModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleSlideSave(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">رفع صورة الغلاف من الجهاز</label>
+          <input type="file" accept="image/*" onchange="handleFileUpload(this, 'slide-img-url')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-emerald">
+          <input type="text" id="slide-img-url" placeholder="أو أدخل رابط الصورة..." class="w-full mt-2 px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">العنوان الرئيسي (عربي)</label>
+            <input type="text" id="slide-title-main" placeholder="تشغيل أكثر كفاءة..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">العنوان الرئيسي (English)</label>
+            <input type="text" id="slide-title-main-en" placeholder="Efficient Operations..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold ltr text-left">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">العنوان البارز (عربي)</label>
+            <input type="text" id="slide-title-accent" placeholder="وعناية تدوم" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">العنوان البارز (English)</label>
+            <input type="text" id="slide-title-accent-en" placeholder="And Lasting Care" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold ltr text-left">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">النص الفرعي (عربي)</label>
+            <textarea id="slide-subtext" rows="2" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-brand-navy mb-2">النص الفرعي (English)</label>
+            <textarea id="slide-subtext-en" rows="2" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-normal ltr text-left"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-brand-emerald text-white font-extrabold text-base rounded-2xl shadow-lg">حفظ الغلاف</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PARTNER CREATE MODAL -->
+  <div id="partner-editor-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl border border-slate-200 space-y-6">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 class="font-extrabold text-xl text-brand-navy">إضافة شريك نجاح جديد</h3>
+        <button onclick="closePartnerEditorModal()" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handlePartnerSave(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">اسم الشريك / الشركة *</label>
+          <input type="text" id="partner-name" required placeholder="شركة الأفق العقارية" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">رفع الشعار من الجهاز</label>
+          <input type="file" accept="image/*" onchange="handleFileUpload(this, 'partner-logo-url')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-emerald">
+          <input type="text" id="partner-logo-url" placeholder="أو أدخل رابط الشعار..." class="w-full mt-2 px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-brand-emerald text-white font-extrabold text-base rounded-2xl shadow-lg">حفظ الشريك</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CHANGE CREDENTIALS MODAL -->
+  <div id="change-password-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl border border-slate-200 space-y-6">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 class="font-extrabold text-xl text-brand-navy">تعديل بيانات الدخول</h3>
+        <button onclick="closeChangePasswordModal()" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleChangePasswordSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">كلمة المرور الحالية *</label>
+          <input type="password" id="pwd-current" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">اسم المستخدم الجديد *</label>
+          <input type="text" id="user-new" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">كلمة المرور الجديدة *</label>
+          <input type="password" id="pwd-new" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-brand-navy mb-2">تأكيد كلمة المرور الجديدة *</label>
+          <input type="password" id="pwd-confirm" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold">
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-brand-emerald text-white font-extrabold text-base rounded-2xl shadow-lg">حفظ البيانات</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Admin JavaScript Logic -->
+  <script>
+    let globalServices = [];
+    let globalCms = {};
+    let globalPartners = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+    });
+
+    function checkAuth() {
+      const token = sessionStorage.getItem('servix_admin_token');
+      if (!token) {
+        document.getElementById('admin-login-modal').classList.remove('hidden');
+      } else {
+        document.getElementById('admin-login-modal').classList.add('hidden');
+        fetchAllAdminData();
+      }
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          sessionStorage.setItem('servix_admin_token', json.token);
+          document.getElementById('admin-login-modal').classList.add('hidden');
+          showToast('تم تسجيل الدخول بنجاح!', 'success');
+          fetchAllAdminData();
+        } else {
+          showToast(json.message || 'فشل تسجيل الدخول', 'error');
+        }
+      } catch (err) {
+        showToast('خطأ في الاتصال بالخادم', 'error');
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem('servix_admin_token');
+      checkAuth();
+    }
+
+    /* Change Password Handler */
+    function openChangePasswordModal() {
+      document.getElementById('change-password-modal').classList.remove('hidden');
+    }
+    function closeChangePasswordModal() {
+      document.getElementById('change-password-modal').classList.add('hidden');
+    }
+
+    async function handleChangePasswordSubmit(e) {
+      e.preventDefault();
+      const currentPassword = document.getElementById('pwd-current').value;
+      const newUsername = document.getElementById('user-new').value;
+      const newPassword = document.getElementById('pwd-new').value;
+      const confirmPassword = document.getElementById('pwd-confirm').value;
+
+      if (newPassword !== confirmPassword) {
+        showToast('كلمتا المرور غير متطابقتين', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/change-credentials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword, newUsername, newPassword })
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          showToast('تم تغيير كلمة المرور بنجاح!', 'success');
+          closeChangePasswordModal();
+          e.target.reset();
+        } else {
+          showToast(json.message || 'حدث خطأ أثناء التغيير', 'error');
+        }
+      } catch (err) {
+        showToast('خطأ في التواصل مع السيرفر', 'error');
+      }
+    }
+
+    /* File Upload Helper (converts local file to Base64 and posts to /api/admin/upload) */
+    async function handleFileUpload(fileInput, targetInputId) {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const imageBase64 = e.target.result;
+        try {
+          const res = await fetch('/api/admin/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file.name, imageBase64 })
+          });
+          const json = await res.json();
+          if (json.success && json.url) {
+            document.getElementById(targetInputId).value = json.url;
+            showToast('تم رفع الصورة من الجهاز بنجاح! ✅', 'success');
+          } else {
+            showToast('فشل رفع الصورة', 'error');
+          }
+        } catch (err) {
+          showToast('خطأ أثناء رفع الصورة', 'error');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabId).classList.remove('hidden');
+      btn.classList.add('active');
+    }
+
+    async function fetchAllAdminData() {
+      fetchServices();
+      fetchCms();
+      fetchPartners();
+      fetchArticles();
+    }
+
+    // ==========================================
+    // ARTICLES MANAGEMENT
+    // ==========================================
+    let articlesList = [];
+
+    async function fetchArticles() {
+      try {
+        const res = await fetch('/api/admin/articles', { headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('servix_admin_token') }});
+        const json = await res.json();
+        if (json.success) {
+          articlesList = json.articles;
+          renderAdminArticles();
+        }
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+      }
+    }
+
+    function renderAdminArticles() {
+      const tbody = document.getElementById('articles-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      articlesList.forEach(art => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-slate-100 hover:bg-slate-50 transition-colors';
+        tr.innerHTML = `
+          <td class="p-4">
+            <img src="${art.imageUrl || '/assets/logo.png'}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shadow-sm">
+          </td>
+          <td class="p-4 font-extrabold text-brand-navy">${art.title}</td>
+          <td class="p-4 font-bold text-slate-500">${art.date || ''}</td>
+          <td class="p-4">
+            <span class="px-3 py-1 rounded-full text-xs font-extrabold ${art.active !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">
+              ${art.active !== false ? 'نشط' : 'مخفي'}
+            </span>
+          </td>
+          <td class="p-4 text-center space-x-2 space-x-reverse">
+            <button onclick="editArticle('${art.id}')" class="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors shadow-sm inline-flex">
+              <span class="material-symbols-outlined text-sm">edit</span>
+            </button>
+            <button onclick="deleteArticle('${art.id}')" class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition-colors shadow-sm inline-flex">
+              <span class="material-symbols-outlined text-sm">delete</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openArticleModal() {
+      document.getElementById('art-edit-id').value = '';
+      document.getElementById('art-title').value = '';
+      document.getElementById('art-title-en').value = '';
+      document.getElementById('art-slug').value = '';
+      document.getElementById('art-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('art-shortDesc').value = '';
+      document.getElementById('art-shortDesc-en').value = '';
+      document.getElementById('art-content').value = '';
+      document.getElementById('art-content-en').value = '';
+      document.getElementById('art-imageUrl').value = '';
+      document.getElementById('art-image-upload').value = '';
+      document.getElementById('art-metaTitle').value = '';
+      document.getElementById('art-metaDesc').value = '';
+      document.getElementById('art-keywords').value = '';
+      document.getElementById('art-active').checked = true;
+      document.getElementById('article-modal-title').innerText = 'إضافة مقال جديد';
+      document.getElementById('article-editor-modal').classList.remove('hidden');
+    }
+
+    function closeArticleModal() {
+      document.getElementById('article-editor-modal').classList.add('hidden');
+    }
+
+    function editArticle(id) {
+      const art = articlesList.find(a => a.id === id);
+      if(!art) return;
+      document.getElementById('art-edit-id').value = art.id;
+      document.getElementById('art-title').value = art.title;
+      document.getElementById('art-title-en').value = art.titleEn || '';
+      document.getElementById('art-slug').value = art.slug || '';
+      document.getElementById('art-date').value = art.date || '';
+      document.getElementById('art-shortDesc').value = art.shortDesc || '';
+      document.getElementById('art-shortDesc-en').value = art.shortDescEn || '';
+      document.getElementById('art-content').value = art.content || '';
+      document.getElementById('art-content-en').value = art.contentEn || '';
+      document.getElementById('art-imageUrl').value = art.imageUrl || '';
+      document.getElementById('art-image-upload').value = '';
+      document.getElementById('art-metaTitle').value = art.metaTitle || '';
+      document.getElementById('art-metaDesc').value = art.metaDescription || '';
+      document.getElementById('art-keywords').value = art.keywords || '';
+      document.getElementById('art-active').checked = art.active !== false;
+      document.getElementById('article-modal-title').innerText = 'تعديل مقال';
+      document.getElementById('article-editor-modal').classList.remove('hidden');
+    }
+
+    async function uploadImageFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const imageBase64 = e.target.result;
+          try {
+            const res = await fetch('/api/admin/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ filename: file.name, imageBase64 })
+            });
+            const json = await res.json();
+            if (json.success && json.url) {
+              resolve(json.url);
+            } else {
+              reject(new Error('Upload failed'));
+            }
+          } catch (err) {
+            reject(err);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleArticleSave(e) {
+      e.preventDefault();
+      const id = document.getElementById('art-edit-id').value;
+      const fileInput = document.getElementById('art-image-upload');
+      
+      let finalImageUrl = document.getElementById('art-imageUrl').value;
+      
+      if (fileInput.files && fileInput.files[0]) {
+        document.getElementById('art-upload-progress').classList.remove('hidden');
+        try {
+          finalImageUrl = await uploadImageFile(fileInput.files[0]);
+        } catch (err) {
+          showToast('فشل رفع الصورة', 'error');
+        }
+        document.getElementById('art-upload-progress').classList.add('hidden');
+      }
+
+      const payload = {
+        title: document.getElementById('art-title').value,
+        titleEn: document.getElementById('art-title-en').value,
+        slug: document.getElementById('art-slug').value,
+        date: document.getElementById('art-date').value,
+        shortDesc: document.getElementById('art-shortDesc').value,
+        shortDescEn: document.getElementById('art-shortDesc-en').value,
+        content: document.getElementById('art-content').value,
+        contentEn: document.getElementById('art-content-en').value,
+        imageUrl: finalImageUrl,
+        metaTitle: document.getElementById('art-metaTitle').value,
+        metaDescription: document.getElementById('art-metaDesc').value,
+        keywords: document.getElementById('art-keywords').value,
+        active: document.getElementById('art-active').checked
+      };
+
+      try {
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `/api/admin/articles/${id}` : '/api/admin/articles';
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + sessionStorage.getItem('servix_admin_token')
+          },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'تم الحفظ بنجاح');
+          closeArticleModal();
+          fetchArticles();
+        } else {
+          showToast(json.message || 'خطأ في الحفظ', 'error');
+        }
+      } catch (err) {
+        showToast('حدث خطأ في الاتصال بالسيرفر', 'error');
+      }
+    }
+
+    async function deleteArticle(id) {
+      if(!confirm('هل أنت متأكد من حذف هذا المقال نهائياً؟')) return;
+      try {
+        const res = await fetch(`/api/admin/articles/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('servix_admin_token') }
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'تم الحذف بنجاح');
+          fetchArticles();
+        } else {
+          showToast(json.message || 'خطأ أثناء الحذف', 'error');
+        }
+      } catch (err) {
+        showToast('حدث خطأ', 'error');
+      }
+    }
+
+    /* Services Management */
+    async function fetchServices() {
+      try {
+        const res = await fetch('/api/admin/services');
+        const json = await res.json();
+        if (json.success) {
+          globalServices = json.data || [];
+          renderServicesGrid(globalServices);
+          document.getElementById('kpi-services-count').innerText = globalServices.length;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderServicesGrid(services) {
+      const container = document.getElementById('admin-services-grid');
+      if (!container) return;
+      container.innerHTML = services.map(s => `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="h-40 w-full rounded-xl overflow-hidden bg-slate-100">
+              <img src="${s.imageUrl || 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80'}" alt="${s.title}" class="w-full h-full object-cover">
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-brand-emerald text-xs font-bold">${s.category}</span>
+              <span class="material-symbols-outlined text-slate-400">${s.icon || 'home_repair_service'}</span>
+            </div>
+            <h4 class="font-extrabold text-lg text-brand-navy">${s.title}</h4>
+            <p class="text-xs text-slate-500 font-normal line-clamp-2">${s.shortDesc}</p>
+          </div>
+
+          <div class="flex gap-2 pt-3 border-t border-slate-100">
+            <button onclick="editService('${s.id}')" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-base">edit</span>
+              <span>تعديل</span>
+            </button>
+            <button onclick="deleteService('${s.id}')" class="py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs flex items-center justify-center">
+              <span class="material-symbols-outlined text-base">delete</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddServiceModal() {
+      document.getElementById('service-modal-title').innerText = 'إضافة خدمة جديدة';
+      document.getElementById('srv-edit-id').value = '';
+      document.getElementById('srv-title').value = '';
+      document.getElementById('srv-title-en').value = '';
+      document.getElementById('srv-short-desc').value = '';
+      document.getElementById('srv-short-desc-en').value = '';
+      document.getElementById('srv-full-desc').value = '';
+      document.getElementById('srv-full-desc-en').value = '';
+      document.getElementById('srv-image-url').value = '';
+      document.getElementById('srv-features').value = '';
+      document.getElementById('srv-features-en').value = '';
+      document.getElementById('service-editor-modal').classList.remove('hidden');
+    }
+
+    function editService(id) {
+      const srv = globalServices.find(s => s.id === id);
+      if (!srv) return;
+      document.getElementById('service-modal-title').innerText = 'تعديل الخدمة';
+      document.getElementById('srv-edit-id').value = srv.id;
+      document.getElementById('srv-title').value = srv.title || '';
+      document.getElementById('srv-title-en').value = srv.titleEn || '';
+      document.getElementById('srv-category').value = srv.category || 'صيانة وتشغيل';
+      document.getElementById('srv-icon').value = srv.icon || 'home_repair_service';
+      document.getElementById('srv-short-desc').value = srv.shortDesc || '';
+      document.getElementById('srv-short-desc-en').value = srv.shortDescEn || '';
+      document.getElementById('srv-full-desc').value = srv.fullDesc || '';
+      document.getElementById('srv-full-desc-en').value = srv.fullDescEn || '';
+      document.getElementById('srv-image-url').value = srv.imageUrl || '';
+      document.getElementById('srv-features').value = (srv.features || []).join('\n');
+      document.getElementById('srv-features-en').value = (srv.featuresEn || []).join('\n');
+      document.getElementById('service-editor-modal').classList.remove('hidden');
+    }
+
+    function closeServiceEditorModal() {
+      document.getElementById('service-editor-modal').classList.add('hidden');
+    }
+
+    async function handleServiceSave(e) {
+      e.preventDefault();
+      const id = document.getElementById('srv-edit-id').value;
+      const payload = {
+        title: document.getElementById('srv-title').value,
+        titleEn: document.getElementById('srv-title-en').value,
+        category: document.getElementById('srv-category').value,
+        icon: document.getElementById('srv-icon').value,
+        shortDesc: document.getElementById('srv-short-desc').value,
+        shortDescEn: document.getElementById('srv-short-desc-en').value,
+        fullDesc: document.getElementById('srv-full-desc').value,
+        fullDescEn: document.getElementById('srv-full-desc-en').value,
+        imageUrl: document.getElementById('srv-image-url').value,
+        features: document.getElementById('srv-features').value,
+        featuresEn: document.getElementById('srv-features-en').value
+      };
+
+      const url = id ? `/api/admin/services/${id}` : '/api/admin/services';
+      const method = id ? 'PUT' : 'POST';
+
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast('تم حفظ الخدمة بنجاح!', 'success');
+          closeServiceEditorModal();
+          fetchServices();
+        } else {
+          showToast(json.message || 'خطأ في الحفظ', 'error');
+        }
+      } catch (err) {
+        showToast('خطأ في الاتصال بالخادم', 'error');
+      }
+    }
+
+    async function deleteService(id) {
+      if (!confirm('هل أنت متأكد من حذف هذه الخدمة؟')) return;
+      try {
+        const res = await fetch(`/api/admin/services/${id}`, { method: 'DELETE' });
+        const json = await res.json();
+        if (json.success) {
+          showToast('تم حذف الخدمة', 'success');
+          fetchServices();
+        }
+      } catch (err) {
+        showToast('خطأ أثناء الحذف', 'error');
+      }
+    }
+
+    /* Hero Cover Slides Management */
+    function renderSlidesGrid(slides) {
+      const container = document.getElementById('admin-slides-grid');
+      if (!container) return;
+      container.innerHTML = (slides || []).map((slide, i) => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 shadow-sm">
+          <div class="h-36 w-full rounded-xl overflow-hidden bg-slate-100">
+            <img src="${slide.bgImageUrl}" alt="Slide" class="w-full h-full object-cover">
+          </div>
+          <h4 class="font-extrabold text-sm text-brand-navy">${slide.titleMain || 'صورة غلاف'}</h4>
+          <p class="text-xs text-slate-500 font-normal truncate">${slide.subtext || ''}</p>
+          <button onclick="deleteSlide(${i})" class="w-full py-2 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100">حذف الغلاف</button>
+        </div>
+      `).join('');
+    }
+
+    function openAddSlideModal() {
+      document.getElementById('slide-editor-modal').classList.remove('hidden');
+    }
+    function closeSlideEditorModal() {
+      document.getElementById('slide-editor-modal').classList.add('hidden');
+    }
+
+    async function handleSlideSave(e) {
+      e.preventDefault();
+      const newSlide = {
+        id: `slide-${Date.now()}`,
+        bgImageUrl: document.getElementById('slide-img-url').value,
+        titleMain: document.getElementById('slide-title-main').value,
+        titleMainEn: document.getElementById('slide-title-main-en').value,
+        titleAccent: document.getElementById('slide-title-accent').value,
+        titleAccentEn: document.getElementById('slide-title-accent-en').value,
+        subtext: document.getElementById('slide-subtext').value,
+        subtextEn: document.getElementById('slide-subtext-en').value
+      };
+
+      if (!globalCms.hero) globalCms.hero = {};
+      if (!globalCms.hero.slides) globalCms.hero.slides = [];
+      globalCms.hero.slides.push(newSlide);
+
+      try {
+        const res = await fetch('/api/admin/cms', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hero: globalCms.hero })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast('تمت إضافة صورة الغلاف بنجاح!', 'success');
+          closeSlideEditorModal();
+          fetchCms();
+        }
+      } catch (err) {
+        showToast('خطأ في حفظ الغلاف', 'error');
+      }
+    }
+
+    async function deleteSlide(idx) {
+      if (!confirm('هل تريد حذف صورة الغلاف هذه؟')) return;
+      globalCms.hero.slides.splice(idx, 1);
+      try {
+        const res = await fetch('/api/admin/cms', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hero: globalCms.hero })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast('تم حذف صورة الغلاف', 'success');
+          fetchCms();
+        }
+      } catch (err) {
+        showToast('خطأ في الحذف', 'error');
+      }
+    }
+
+    /* Partners Management */
+    async function fetchPartners() {
+      try {
+        const res = await fetch('/api/admin/partners');
+        const json = await res.json();
+        if (json.success) {
+          globalPartners = json.data || [];
+          renderPartnersGrid(globalPartners);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderPartnersGrid(partners) {
+      const container = document.getElementById('admin-partners-grid');
+      if (!container) return;
+      container.innerHTML = partners.map(p => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 text-center shadow-sm">
+          <img src="${p.logo || 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=300&q=80'}" alt="${p.name}" class="h-12 w-auto mx-auto object-contain">
+          <p class="font-extrabold text-xs text-brand-navy truncate">${p.name}</p>
+          <button onclick="deletePartner('${p.id}')" class="w-full py-1.5 bg-red-50 text-red-600 font-bold text-xs rounded-lg hover:bg-red-100">حذف</button>
+        </div>
+      `).join('');
+    }
+
+    function openAddPartnerModal() {
+      document.getElementById('partner-editor-modal').classList.remove('hidden');
+    }
+    function closePartnerEditorModal() {
+      document.getElementById('partner-editor-modal').classList.add('hidden');
+    }
+
+    async function handlePartnerSave(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('partner-name').value,
+        logo: document.getElementById('partner-logo-url').value
+      };
+
+      try {
+        const res = await fetch('/api/admin/partners', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast('تمت إضافة الشريك بنجاح!', 'success');
+          closePartnerEditorModal();
+          fetchPartners();
+        }
+      } catch (err) {
+        showToast('خطأ في إضافة الشريك', 'error');
+      }
+    }
+
+    async function deletePartner(id) {
+      if (!confirm('هل ترغب في حذف هذا الشريك؟')) return;
+      try {
+        const res = await fetch(`/api/admin/partners/${id}`, { method: 'DELETE' });
+        const json = await res.json();
+        if (json.success) {
+          showToast('تم حذف الشريك', 'success');
+          fetchPartners();
+        }
+      } catch (err) {
+        showToast('خطأ أثناء الحذف', 'error');
+      }
+    }
+
+    /* CMS Settings */
+    async function fetchCms() {
+      try {
+        const res = await fetch('/api/admin/cms');
+        const json = await res.json();
+        if (json.success) {
+          globalCms = json.data || {};
+          if (globalCms.hero && globalCms.hero.slides) {
+            renderSlidesGrid(globalCms.hero.slides);
+          }
+          if (globalCms.contact) {
+            document.getElementById('setting-whatsapp').value = globalCms.contact.whatsapp || '';
+            
+            // GM
+            document.getElementById('setting-gm-name').value = globalCms.contact.gmName || '';
+            document.getElementById('setting-gm-phone').value = globalCms.contact.gmPhone || '';
+            document.getElementById('setting-gm-email').value = globalCms.contact.gmEmail || '';
+            
+            // Sales
+            document.getElementById('setting-sales-name').value = globalCms.contact.salesName || '';
+            document.getElementById('setting-sales-phone').value = globalCms.contact.salesPhone || '';
+            document.getElementById('setting-sales-email').value = globalCms.contact.salesEmail || '';
+            
+            // HQ
+            document.getElementById('setting-hq-address').value = globalCms.contact.hqAddress || '';
+            document.getElementById('setting-hq-phone').value = globalCms.contact.hqPhone || '';
+            document.getElementById('setting-hq-email').value = globalCms.contact.hqEmail || '';
+          }
+          if (globalCms.socialLinks) {
+            document.getElementById('social-twitter').value = globalCms.socialLinks.twitter || '';
+            document.getElementById('social-instagram').value = globalCms.socialLinks.instagram || '';
+            document.getElementById('social-snapchat').value = globalCms.socialLinks.snapchat || '';
+            document.getElementById('social-linkedin').value = globalCms.socialLinks.linkedin || '';
+            document.getElementById('social-tiktok').value = globalCms.socialLinks.tiktok || '';
+            document.getElementById('social-facebook').value = globalCms.socialLinks.facebook || '';
+          }
+          if (globalCms.about) {
+            document.getElementById('setting-about-img').value = globalCms.about.imageUrl || '';
+          }
+          if (globalCms.logo) {
+            document.getElementById('setting-logo-img').value = globalCms.logo.url || '';
+            const logoSize = globalCms.logo.size || 120;
+            document.getElementById('setting-logo-size').value = logoSize;
+            document.getElementById('logo-size-val').innerText = logoSize + 'px';
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function handleCmsSave(e) {
+      e.preventDefault();
+      const contact = {
+        whatsapp: document.getElementById('setting-whatsapp').value,
+        gmName: document.getElementById('setting-gm-name').value,
+        gmPhone: document.getElementById('setting-gm-phone').value,
+        gmEmail: document.getElementById('setting-gm-email').value,
+        salesName: document.getElementById('setting-sales-name').value,
+        salesPhone: document.getElementById('setting-sales-phone').value,
+        salesEmail: document.getElementById('setting-sales-email').value,
+        hqAddress: document.getElementById('setting-hq-address').value,
+        hqPhone: document.getElementById('setting-hq-phone').value,
+        hqEmail: document.getElementById('setting-hq-email').value
+      };
+      
+      const socialLinks = {
+        twitter: document.getElementById('social-twitter').value,
+        instagram: document.getElementById('social-instagram').value,
+        snapchat: document.getElementById('social-snapchat').value,
+        linkedin: document.getElementById('social-linkedin').value,
+        tiktok: document.getElementById('social-tiktok').value,
+        facebook: document.getElementById('social-facebook').value
+      };
+      
+      const about = {
+        imageUrl: document.getElementById('setting-about-img').value
+      };
+
+      const logo = {
+        url: document.getElementById('setting-logo-img').value,
+        size: document.getElementById('setting-logo-size').value
+      };
+
+      try {
+        const res = await fetch('/api/admin/cms', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact, socialLinks, about, logo })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast('تم حفظ الإعدادات بنجاح!', 'success');
+          fetchCms();
+        }
+      } catch (err) {
+        showToast('خطأ في الاتصال بالخادم', 'error');
+      }
+    }
+
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-4 rounded-2xl text-white font-extrabold text-sm shadow-2xl flex items-center justify-between gap-3 ${type === 'success' ? 'bg-emerald-600' : 'bg-red-600'}`;
+      toast.innerHTML = `
+        <span>${msg}</span>
+        <button onclick="this.parentElement.remove()" class="text-white opacity-80 hover:opacity-100">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => { if (toast.parentNode) toast.remove(); }, 4000);
+    }
+  </script>
+</body>
+</html>
