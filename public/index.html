@@ -127,7 +127,7 @@
     .animate-marquee-ltr {
       display: flex;
       width: max-content;
-      animation: marqueeLeftToRight 25s linear infinite;
+      animation: marqueeLeftToRight 50s linear infinite;
     }
     .animate-marquee-ltr:hover {
       animation-play-state: paused;
@@ -440,9 +440,9 @@
           <p id="process-desc" class="text-slate-600 text-base sm:text-lg font-bold">منهجية واضحة ومدروسة لضمان تقديم خدمة تليق بتطلعاتك.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
           <!-- Connector Line for Desktop -->
-          <div class="hidden md:block absolute top-12 start-10 end-10 h-0.5 bg-emerald-200 z-0"></div>
+          <div class="hidden lg:block absolute top-12 start-10 end-10 h-0.5 bg-emerald-200 z-0"></div>
 
           <!-- Step 1 -->
           <div class="relative z-10 flex flex-col items-center text-center group">
@@ -469,6 +469,15 @@
             </div>
             <h3 id="process-s3-title" class="text-xl font-extrabold text-brand-navy mb-3">3. التنفيذ والجودة</h3>
             <p id="process-s3-desc" class="text-slate-600 text-sm leading-relaxed">تنفيذ المهام تحت إشراف هندسي صارم ومتابعة مستمرة لضمان تحقيق أعلى معايير الجودة.</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="relative z-10 flex flex-col items-center text-center group">
+            <div class="w-24 h-24 rounded-full bg-white border-4 border-emerald-100 flex items-center justify-center text-brand-emerald shadow-xl mb-6 transition-transform group-hover:scale-110 group-hover:border-brand-emerald">
+              <span class="material-symbols-outlined text-4xl">autorenew</span>
+            </div>
+            <h3 id="process-s4-title" class="text-xl font-extrabold text-brand-navy mb-3">4. المتابعة الدورية</h3>
+            <p id="process-s4-desc" class="text-slate-600 text-sm leading-relaxed">متابعة دورية بعد التنفيذ لضمان استمرارية الجودة وتلقّي ملاحظات العميل وتحقيق رضاه الكامل.</p>
           </div>
         </div>
       </div>
