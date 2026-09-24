@@ -7,7 +7,7 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://servix.sa/</loc>
+    <loc>https://www.servixsaudi.com/</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -15,7 +15,7 @@
 
   <!-- Articles / Blog Listing -->
   <url>
-    <loc>https://servix.sa/articles.html</loc>
+    <loc>https://www.servixsaudi.com/articles.html</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
@@ -24,49 +24,49 @@
   <!-- ===================== HOMEPAGE ANCHORS ===================== -->
 
   <url>
-    <loc>https://servix.sa/#services</loc>
+    <loc>https://www.servixsaudi.com/#services</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/#about</loc>
+    <loc>https://www.servixsaudi.com/#about</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/#partners</loc>
+    <loc>https://www.servixsaudi.com/#partners</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/#vision</loc>
+    <loc>https://www.servixsaudi.com/#vision</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/#process</loc>
+    <loc>https://www.servixsaudi.com/#process</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/#rfq</loc>
+    <loc>https://www.servixsaudi.com/#rfq</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/#contact</loc>
+    <loc>https://www.servixsaudi.com/#contact</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -75,28 +75,28 @@
   <!-- ===================== ARTICLE PAGES (dynamic slugs) ===================== -->
 
   <url>
-    <loc>https://servix.sa/article.html?slug=preventive-maintenance-importance</loc>
+    <loc>https://www.servixsaudi.com/article.html?slug=preventive-maintenance-importance</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/article.html?slug=glass-facade-cleaning-guide</loc>
+    <loc>https://www.servixsaudi.com/article.html?slug=glass-facade-cleaning-guide</loc>
     <lastmod>2026-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/article.html?slug=smart-facility-management-tech</loc>
+    <loc>https://www.servixsaudi.com/article.html?slug=smart-facility-management-tech</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://servix.sa/article.html?slug=hse-standards-residential</loc>
+    <loc>https://www.servixsaudi.com/article.html?slug=hse-standards-residential</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
