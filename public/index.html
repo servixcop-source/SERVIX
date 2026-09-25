@@ -24,6 +24,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <!-- FontAwesome CDN for Real Social Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -158,10 +160,10 @@
 
       <nav class="hidden xl:flex items-center justify-center gap-1 xl:gap-2 flex-1">
         <a href="#hero" id="nav-home" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-brand-navy hover:text-brand-emerald transition-colors">الرئيسية</a>
-        <a href="#services" id="nav-services" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">خدماتنا</a>
         <a href="#about" id="nav-about" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">من نحن</a>
+        <a href="#services" id="nav-services" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">خدماتنا</a>
         <a href="#partners" id="nav-partners" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">شركاء النجاح</a>
-        <a href="#vision" id="nav-vision" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">رؤيتنا وقيمنا</a>
+        <a href="#vision" id="nav-vision" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">رؤيتنا ورسالتنا</a>
         <a href="#process" id="nav-process" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">آلية العمل</a>
         <a href="/articles.html" id="nav-blog" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">المدونة</a>
         <a href="#rfq" id="nav-rfq" class="nav-link px-2 lg:px-2.5 py-2 text-xs lg:text-sm whitespace-nowrap font-bold text-slate-700 hover:text-brand-navy transition-colors">طلب تسعير</a>
@@ -191,10 +193,10 @@
     <!-- Mobile Navigation Drawer (Public Only - NO Admin Buttons) -->
     <div id="mobile-menu" class="hidden xl:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-2 shadow-xl">
       <a href="#hero" id="m-nav-home" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">الرئيسية</a>
-      <a href="#services" id="m-nav-services" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-extrabold text-brand-emerald bg-emerald-50 rounded-xl">خدماتنا</a>
       <a href="#about" id="m-nav-about" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">من نحن</a>
+      <a href="#services" id="m-nav-services" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-extrabold text-brand-emerald bg-emerald-50 rounded-xl">خدماتنا</a>
       <a href="#partners" id="m-nav-partners" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">شركاء النجاح</a>
-      <a href="#vision" id="m-nav-vision" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">رؤيتنا وقيمنا</a>
+      <a href="#vision" id="m-nav-vision" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">رؤيتنا ورسالتنا</a>
       <a href="#process" id="m-nav-process" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">آلية العمل</a>
       <a href="/articles.html" id="m-nav-blog" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">المدونة</a>
       <a href="#rfq" id="m-nav-rfq" onclick="toggleMobileMenu()" class="flex items-center gap-2 px-4 py-3 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-xl">طلب تسعير</a>
@@ -598,34 +600,34 @@
                     <div class="w-8 h-8 rounded-full bg-emerald-50 text-brand-emerald flex items-center justify-center shrink-0">
                       <span class="material-symbols-outlined text-sm">call</span>
                     </div>
-                    <p id="contact-gm-name" class="font-bold text-sm text-brand-navy" dir="ltr">Eng. Riyadh Salah</p>
-                    <p id="contact-gm-phone" class="font-bold text-sm text-brand-navy" dir="ltr">+966 50 085 5970</p>
+                    <p id="contact-gm-name" class="font-bold text-sm text-brand-navy" dir="ltr">Eng. ABDALLA MAJED</p>
+                    <p id="contact-gm-phone" class="font-bold text-sm text-brand-navy" dir="ltr">0569029091</p>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-blue-50 text-brand-emerald flex items-center justify-center shrink-0">
                       <span class="material-symbols-outlined text-sm">mail</span>
                     </div>
-                    <p id="contact-gm-email" class="font-bold text-sm text-brand-navy" dir="ltr">riyadh.salah@appco.com.sa</p>
+                    <p id="contact-gm-email" class="font-bold text-sm text-brand-navy" dir="ltr">ceo@servixsaudi.com</p>
                   </div>
                 </div>
               </div>
 
-              <!-- Sales Engineer -->
+              <!-- Sales Manager -->
               <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-md">
-                <h4 class="font-extrabold text-xl text-brand-emerald mb-4">مهندس المبيعات (Sales Engineer)</h4>
+                <h4 class="font-extrabold text-xl text-brand-emerald mb-4">مدير المبيعات (Sales Manager)</h4>
                 <div class="space-y-3">
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-emerald-50 text-brand-emerald flex items-center justify-center shrink-0">
                       <span class="material-symbols-outlined text-sm">call</span>
                     </div>
-                    <p id="contact-sales-name" class="font-bold text-sm text-brand-navy" dir="ltr">Eng. Muaaz Mohammed</p>
-                    <p id="contact-sales-phone" class="font-bold text-sm text-brand-navy" dir="ltr">+966 59 960 2524</p>
+                    <p id="contact-sales-name" class="font-bold text-sm text-brand-navy" dir="rtl">طلال الفضل</p>
+                    <p id="contact-sales-phone" class="font-bold text-sm text-brand-navy" dir="ltr">0567172020</p>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-blue-50 text-brand-emerald flex items-center justify-center shrink-0">
                       <span class="material-symbols-outlined text-sm">mail</span>
                     </div>
-                    <p id="contact-sales-email" class="font-bold text-sm text-brand-navy" dir="ltr">muaaz.mohamed@appco.com.sa</p>
+                    <p id="contact-sales-email" class="font-bold text-sm text-brand-navy" dir="ltr">sales@servixsaudi.com</p>
                   </div>
                 </div>
               </div>
@@ -638,19 +640,19 @@
                     <div class="w-8 h-8 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center shrink-0 mt-1">
                       <span class="material-symbols-outlined text-sm">location_on</span>
                     </div>
-                    <p id="contact-hq-address" class="font-bold text-sm text-brand-navy" dir="ltr">Riyadh, King Abdulaziz District, Ibn Kather Street 7783</p>
+                    <p id="contact-hq-address" class="font-bold text-sm text-brand-navy" dir="rtl">العنوان .....</p>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-emerald-50 text-brand-emerald flex items-center justify-center shrink-0">
                       <span class="material-symbols-outlined text-sm">call</span>
                     </div>
-                    <p id="contact-hq-phone" class="font-bold text-sm text-brand-navy" dir="ltr">+966 50 085 5970</p>
+                    <p id="contact-hq-phone" class="font-bold text-sm text-brand-navy" dir="ltr">0549029091</p>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-blue-50 text-brand-emerald flex items-center justify-center shrink-0">
                       <span class="material-symbols-outlined text-sm">mail</span>
                     </div>
-                    <p id="contact-hq-email" class="font-bold text-sm text-brand-navy" dir="ltr">info@appco.com.sa</p>
+                    <p id="contact-hq-email" class="font-bold text-sm text-brand-navy" dir="ltr">info@servixsaudi.com</p>
                   </div>
                 </div>
               </div>
@@ -814,8 +816,8 @@
 
     const i18nDict = {
       en: {
-        'nav-home': 'Home', 'nav-services': 'Services', 'nav-about': 'About Us', 'nav-partners': 'Partners', 'nav-vision': 'Vision & Values', 'nav-process': 'How We Work', 'nav-blog': 'Blog', 'nav-rfq': 'Request Quote', 'nav-contact': 'Contact Us',
-        'm-nav-home': 'Home', 'm-nav-services': 'Services', 'm-nav-about': 'About', 'm-nav-partners': 'Partners', 'm-nav-vision': 'Vision', 'm-nav-process': 'How We Work', 'm-nav-blog': 'Blog', 'm-nav-rfq': 'Request Quote', 'm-nav-contact': 'Contact',
+        'nav-home': 'Home', 'nav-services': 'Services', 'nav-about': 'About Us', 'nav-partners': 'Partners', 'nav-vision': 'Vision & Mission', 'nav-process': 'How We Work', 'nav-blog': 'Blog', 'nav-rfq': 'Request Quote', 'nav-contact': 'Contact Us',
+        'm-nav-home': 'Home', 'm-nav-services': 'Services', 'm-nav-about': 'About', 'm-nav-partners': 'Partners', 'm-nav-vision': 'Vision & Mission', 'm-nav-process': 'How We Work', 'm-nav-blog': 'Blog', 'm-nav-rfq': 'Request Quote', 'm-nav-contact': 'Contact',
         'btn-all-articles': 'View All Articles',
         'lang-toggle-text': 'عربي',
         'hero-badge': 'Integrated Facility Management Solutions in KSA',
@@ -940,8 +942,8 @@
         'opt-5': 'Industrial / Factories & Warehouses',
 },
       ar: {
-        'nav-home': 'الرئيسية', 'nav-services': 'خدماتنا', 'nav-about': 'من نحن', 'nav-partners': 'شركاء النجاح', 'nav-vision': 'رؤيتنا وقيمنا', 'nav-process': 'آلية العمل', 'nav-blog': 'المدونة', 'nav-rfq': 'طلب تسعير', 'nav-contact': 'تواصل معنا',
-        'm-nav-home': 'الرئيسية', 'm-nav-services': 'خدماتنا', 'm-nav-about': 'من نحن', 'm-nav-partners': 'شركاء النجاح', 'm-nav-vision': 'رؤيتنا وقيمنا', 'm-nav-process': 'آلية العمل', 'm-nav-blog': 'المدونة', 'm-nav-rfq': 'طلب تسعير', 'm-nav-contact': 'تواصل معنا',
+        'nav-home': 'الرئيسية', 'nav-services': 'خدماتنا', 'nav-about': 'من نحن', 'nav-partners': 'شركاء النجاح', 'nav-vision': 'رؤيتنا ورسالتنا', 'nav-process': 'آلية العمل', 'nav-blog': 'المدونة', 'nav-rfq': 'طلب تسعير', 'nav-contact': 'تواصل معنا',
+        'm-nav-home': 'الرئيسية', 'm-nav-services': 'خدماتنا', 'm-nav-about': 'من نحن', 'm-nav-partners': 'شركاء النجاح', 'm-nav-vision': 'رؤيتنا ورسالتنا', 'm-nav-process': 'آلية العمل', 'm-nav-blog': 'المدونة', 'm-nav-rfq': 'طلب تسعير', 'm-nav-contact': 'تواصل معنا',
         'btn-all-articles': 'تصفح كل المقالات',
         'lang-toggle-text': 'English',
         'hero-badge': 'حلول متكاملة لإدارة المنشآت والمرافق في المملكة',
@@ -1213,12 +1215,12 @@
              if(footerSocials) {
                footerSocials.innerHTML = '';
                const links = json.socialLinks;
-               if (links.twitter) footerSocials.innerHTML += `<a href="${links.twitter}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><span class="material-symbols-outlined text-xl">share</span></a>`;
-               if (links.linkedin) footerSocials.innerHTML += `<a href="${links.linkedin}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><span class="material-symbols-outlined text-xl">business_center</span></a>`;
-               if (links.instagram) footerSocials.innerHTML += `<a href="${links.instagram}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><span class="material-symbols-outlined text-xl">photo_camera</span></a>`;
-               if (links.facebook) footerSocials.innerHTML += `<a href="${links.facebook}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><span class="material-symbols-outlined text-xl">public</span></a>`;
-               if (links.snapchat) footerSocials.innerHTML += `<a href="${links.snapchat}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><span class="material-symbols-outlined text-xl">filter_vintage</span></a>`;
-               if (links.tiktok) footerSocials.innerHTML += `<a href="${links.tiktok}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><span class="material-symbols-outlined text-xl">music_note</span></a>`;
+               if (links.twitter) footerSocials.innerHTML += `<a href="${links.twitter}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><i class="fa-brands fa-x-twitter text-xl"></i></a>`;
+               if (links.linkedin) footerSocials.innerHTML += `<a href="${links.linkedin}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><i class="fa-brands fa-linkedin-in text-xl"></i></a>`;
+               if (links.instagram) footerSocials.innerHTML += `<a href="${links.instagram}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><i class="fa-brands fa-instagram text-xl"></i></a>`;
+               if (links.facebook) footerSocials.innerHTML += `<a href="${links.facebook}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><i class="fa-brands fa-facebook-f text-xl"></i></a>`;
+               if (links.snapchat) footerSocials.innerHTML += `<a href="${links.snapchat}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><i class="fa-brands fa-snapchat text-xl"></i></a>`;
+               if (links.tiktok) footerSocials.innerHTML += `<a href="${links.tiktok}" target="_blank" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-emerald text-white flex items-center justify-center transition-all"><i class="fa-brands fa-tiktok text-xl"></i></a>`;
              }
           }
 
